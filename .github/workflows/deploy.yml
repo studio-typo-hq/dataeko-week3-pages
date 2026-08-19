@@ -40,6 +40,17 @@ jobs:
       - name: Put the variable into the page
         run: sed -i "s|DATAEKO &middot; Week 3|${{ vars.SITE_TAGLINE }}|" index.html
 
+      # A custom domain is set by putting a CNAME file next to index.html.
+      # Held in a secret so each fork can point at its own subdomain without
+      # editing the workflow. Skipped entirely when the secret is not set,
+      # which is what keeps the default *.github.io URL working.
+      - name: Custom domain, if one is configured
+        if: ${{ secrets.SITE_DOMAIN != '' }}
+        run: |
+          echo "${{ secrets.SITE_DOMAIN }}" > CNAME
+          echo "CNAME file written:"
+          cat CNAME
+
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:
