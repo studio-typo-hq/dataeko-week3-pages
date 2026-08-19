@@ -31,6 +31,15 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v5
+
+      - name: Show what a variable and a secret look like in a log
+        run: |
+          echo "variable is readable : ${{ vars.SITE_TAGLINE }}"
+          echo "secret is masked     : ${{ secrets.BOARD_KEY }}"
+
+      - name: Put the variable into the page
+        run: sed -i "s|DATAEKO &middot; Week 3|${{ vars.SITE_TAGLINE }}|" index.html
+
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:
